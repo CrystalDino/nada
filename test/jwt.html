@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>jwt test</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="alert alert-info" id="info"></div>
+            <br>
+            <form id="login-data">
+                <div class="form-group">
+                    <label >mobile phone</label>
+                    <input type="text" class="form-control" placeholder="mobile phone number" name="cell">
+                </div>
+                <div class="form-group">
+                    <label >Password</label>
+                    <input type="password" class="form-control" placeholder="Password" name="password">
+                </div>
+                <div class="form-group">
+                    <label >Verify code</label>
+                    <input type="code" class="form-control" placeholder="verify code" name="code">
+                    <img src="" id="codeImg">
+                </div>
+                <input type="hidden" name="id" id="imgId" value="">
+            </form>
+            <button id="testPost" type="button" class="btn btn-primary">login</button>
+            <button id="testGet" type="button" class="btn btn-primary">user info</button>
+        </div>
+        
+        <script>
+            var request = new XMLHttpRequest();
+            var nada = "";
+           $('#testGet').click(function(){
+               var url = "/user/info";
+                request.open("get", url, true);  
+                request.onreadystatechange = afterGetInfo;
+                request.setRequestHeader('Nada',nada);             
+                request.send();  
+           });
+
+           $('#testPost').click(function(){
+                var url = "/user/login";
+                request.open("post", url, true);  
+                request.onreadystatechange = afterLogin;
+                var postBody = $('#login-data').serialize();
+                request.setRequestHeader('Nada',nada); 
+                request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');                
+                request.send(postBody);  
+           });
+
+            function afterGetInfo() {  
+                if (request.readyState == 4) {  
+                if (request.status == 200) {  
+                var response = $.parseJSON(request.response);  
+                    if(!response.Ok){
+                        $('#info').html(response.Err); 
+                        return
+                    }
+                    $('#info').html(response.User.Email);  
+                } else { 
+                    $('#info').html("status is " + request.status);  
+                }
+                }  
+            }
+
+            function afterLogin() {  
+                if (request.readyState == 4) {  
+                if (request.status == 200) {  
+                    var response = $.parseJSON(request.response);
+                    if(!response.Ok){
+                        $('#info').html(response.Err);
+                        loadVerifyCode();
+                        return;
+                    }
+                    nada = response.Nada;
+                    $('#info').html("login done");
+                } else { 
+                    $('#info').html("status is " + request.status); 
+                    loadVerifyCode(); 
+                }
+                }  
+            }
+
+            function loadVerifyCode(){
+                $.get("http://localhost:8080/captcha?type=id",
+                function(data){
+                    if(!data.Ok){
+                        alert(data.Err);
+                        $('#info').html(data.Err);
+                        return;
+                    }
+                    $('#codeImg').attr("src","/captcha?type=pic&name="+data.Id+".png");
+                    $('#imgId').val(data.Id);
+                },"json");
+            }
+
+            $('#codeImg').click(function(){
+                loadVerifyCode();
+            });
+
+            $(document).ready(function(){ 
+                loadVerifyCode();
+            });           
+        </script>
+    </body>
+</html>

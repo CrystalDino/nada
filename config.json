@@ -1,0 +1,18 @@
+{
+    "token_key":"crystal.dino@hotmail.com",
+    "token_expire":72000,
+    "token_name":"Nada",
+
+    "log_info":"info.log",
+    "log_error":"error.log",
+
+    "db_source":"dino:passw0rd@tcp(localhost:3306)/nada?charset=utf8",
+    
+    "server_addr":":8080",
+
+    "captcha_width":240,
+    "captcha_height":80,
+
+    "pwd_min":6,
+    "pwd_max":16
+}
