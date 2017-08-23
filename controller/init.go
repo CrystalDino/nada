@@ -28,13 +28,6 @@ func init() {
 
 }
 
-func NewResult() (r Result) {
-	r = make(map[string]interface{}, 0)
-	r["Ok"] = false
-	r["Err"] = ""
-	return
-}
-
 func getToken() gin.HandlerFunc {
 	tn := core.GlobalConfig.GetTokenName()
 	return func(c *gin.Context) {
@@ -50,8 +43,7 @@ func getToken() gin.HandlerFunc {
 			c.Next()
 			return
 		}
-		r := NewResult()
-		r["Err"] = "no token"
+		r := core.MakeResult(false, "no token")
 		c.AbortWithStatusJSON(http.StatusUnauthorized, r)
 	}
 }

@@ -48,18 +48,17 @@ func checkCaptcha(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	r := NewResult()
+	r := core.NewResult()
 	if captcha.VerifyString(k, v) {
-		r["Ok"] = true
+		r.SetOk(true)
 	}
 	c.JSON(http.StatusOK, r)
 }
 
 func makeCaptchaId(c *gin.Context) {
-	r := NewResult()
 	id := captcha.New()
-	r["Id"] = id
-	r["Ok"] = true
+	r := core.MakeResult(true, "")
+	r.Set("Id", id)
 	c.JSON(http.StatusOK, r)
 }
 

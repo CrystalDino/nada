@@ -37,7 +37,7 @@ func init() {
 
 //UserLogin login method
 func UserLogin(c *gin.Context) {
-	r := NewResult()
+	r := core.NewResult()
 	ufl := &models.UserForLogin{}
 	if err := c.Bind(ufl); err != nil {
 		return
@@ -59,17 +59,17 @@ func UserLogin(c *gin.Context) {
 	u, err := ufl.UserPasswdCheck()
 	if err != nil {
 		log.Println(err)
-		r["Err"] = "login failed"
+		r.SetErr("login failed")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 
 	//make token
 	if token, err := u.CreateToken(); err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 	} else {
-		r["Nada"] = token
-		r["Ok"] = true
+		r.Set("Nada", token)
+		r.SetOk(true)
 	}
 
 	//update user table loginip & login time
@@ -87,13 +87,13 @@ func UserRegister(c *gin.Context) {
 	}
 	u.LastLoginIp = c.ClientIP()
 	u.LTime = time.Now().Unix()
-	r := NewResult()
+	r := core.NewResult()
 	id, err := u.Stor()
 	if err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 	} else {
-		r["Id"] = id
-		r["Ok"] = true
+		r.Set("Id", id)
+		r.SetOk(true)
 	}
 	c.JSON(http.StatusOK, r)
 }
@@ -105,96 +105,96 @@ func UserLogout(c *gin.Context) {
 
 //UserInfo show detail info of user
 func UserInfo(c *gin.Context) {
-	r := NewResult()
+	r := core.NewResult()
 	u, err := models.GetUserByID(c.GetInt64("uid"))
 	if err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 	} else {
-		r["User"] = u
-		r["Ok"] = true
+		r.Set("User", u)
+		r.SetOk(true)
 	}
 	c.JSON(http.StatusOK, r)
 }
 
 //UpdatePasswd update user password
 func UpdatePasswd(c *gin.Context) {
-	r := NewResult()
+	r := core.NewResult()
 	oPwd, has := c.GetPostForm("oPwd")
 	if !has {
-		r["Err"] = "lost oPwd"
+		r.SetErr("lost oPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	nPwd, has := c.GetPostForm("nPwd")
 	if !has {
-		r["Err"] = "lost nPwd"
+		r.SetErr("lost nPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	rPwd, has := c.GetPostForm("rPwd")
 	if !has {
-		r["Err"] = "lost rPwd"
+		r.SetErr("lost rPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	if oPwd == "" || nPwd == "" || rPwd == "" {
-		r["Err"] = "pwd can not be nil"
+		r.SetErr("pwd can not be nil")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	if nPwd != rPwd {
-		r["Err"] = "nPwd not equal to rPwd"
+		r.SetErr("nPwd not equal to rPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	err := models.UpdatePassword(c.GetInt64("uid"), oPwd, nPwd)
 	if err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 		c.JSON(http.StatusOK, r)
 		return
 	}
-	r["Ok"] = true
+	r.SetOk(true)
 	c.JSON(http.StatusOK, r)
 }
 
 //UpdateTranscode update transacton password
 func UpdateTranscode(c *gin.Context) {
-	r := NewResult()
+	r := core.NewResult()
 	oPwd, has := c.GetPostForm("oPwd")
 	if !has {
-		r["Err"] = "lost oPwd"
+		r.SetErr("lost oPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	nPwd, has := c.GetPostForm("nPwd")
 	if !has {
-		r["Err"] = "lost nPwd"
+		r.SetErr("lost nPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	rPwd, has := c.GetPostForm("rPwd")
 	if !has {
-		r["Err"] = "lost rPwd"
+		r.SetErr("lost rPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	if nPwd == "" || rPwd == "" {
-		r["Err"] = "pwd can not be nil"
+		r.SetErr("pwd can not be nil")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	if nPwd != rPwd {
-		r["Err"] = "nPwd not equal to rPwd"
+		r.SetErr("nPwd not equal to rPwd")
 		c.JSON(http.StatusOK, r)
 		return
 	}
 	err := models.UpdateTranscode(c.GetInt64("uid"), oPwd, nPwd)
 	if err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 		c.JSON(http.StatusOK, r)
 		return
 	}
-	r["Ok"] = true
+	r.SetOk(true)
 	c.JSON(http.StatusOK, r)
 }
 
@@ -204,14 +204,14 @@ func UpdateInfo(c *gin.Context) {
 	if err := c.Bind(ufi); err != nil {
 		return
 	}
-	r := NewResult()
+	r := core.NewResult()
 	err := ufi.Update(c.GetInt64("uid"))
 	if err != nil {
-		r["Err"] = err.Error()
+		r.SetErr(err.Error())
 		c.JSON(http.StatusOK, r)
 		return
 	}
-	r["Ok"] = true
+	r.SetOk(true)
 	c.JSON(http.StatusOK, r)
 }
 
@@ -225,20 +225,17 @@ func AuthCheck() gin.HandlerFunc {
 		tv := c.MustGet(core.DefaultInternalTokenName).(string)
 		data, err := core.TokenValidate(tv)
 		if err != nil {
-			r := NewResult()
-			r["Err"] = err.Error()
+			r := core.MakeResult(false, err.Error())
 			c.AbortWithStatusJSON(http.StatusNotAcceptable, r)
 			return
 		}
 		if v, ok := data.(map[string]interface{})["id"]; !ok {
-			r := NewResult()
-			r["Err"] = "invalid token no id"
+			r := core.MakeResult(false, "invalid token no id")
 			c.AbortWithStatusJSON(http.StatusNotAcceptable, r)
 			return
 		} else {
 			if reflect.TypeOf(v).Kind() != reflect.Float64 {
-				r := NewResult()
-				r["Err"] = "invalid token wrong id type"
+				r := core.MakeResult(false, "invalid token wrong id type")
 				c.AbortWithStatusJSON(http.StatusNotAcceptable, r)
 				return
 			}

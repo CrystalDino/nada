@@ -4,6 +4,8 @@ package controller
 
 import (
 	"log"
+	"nada/core"
+	"nada/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,6 +43,8 @@ func init() {
 	asset.GET("/order/:id/:tp", OrderLog)
 }
 
+//--------------------------------------------------------------not support - down
+
 //RechargeLog get recharge log
 func RechargeLog(c *gin.Context) {
 	c.String(http.StatusOK, "recharge log")
@@ -48,8 +52,7 @@ func RechargeLog(c *gin.Context) {
 
 //Recharge make a new recharge order
 func Recharge(c *gin.Context) {
-	r := NewResult()
-	r["Err"] = "not support"
+	r := core.MakeResult(false, "not support")
 	c.JSON(http.StatusOK, r)
 }
 
@@ -60,10 +63,11 @@ func WithdrawLog(c *gin.Context) {
 
 //Withdraw name a new withdraw order
 func Withdraw(c *gin.Context) {
-	r := NewResult()
-	r["Err"] = "not support"
+	r := core.MakeResult(false, "not support")
 	c.JSON(http.StatusOK, r)
 }
+
+//---------------------------------------------------------------not support - up
 
 //CoinIn recharge virtual coin, apply a virtual coin address
 func CoinIn(c *gin.Context) {
@@ -97,7 +101,31 @@ func Trust(c *gin.Context) {}
 func TrustLog(c *gin.Context) {}
 
 //BankCard add or remove a bank card
-func BankCard(c *gin.Context) {}
+func BankCard(c *gin.Context) {
+	op := c.Param("op")
+	if op != "add" && op != "rm" {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	bca := &models.BankCardForAdd{}
+	if err := c.Bind(bca); err != nil {
+		return
+	}
+	r := core.NewResult()
+	bc := bca.ToBankCard(c.GetInt64("uid"))
+	id, err := bc.Stor()
+	if err != nil {
+		r.SetErr(err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, r)
+		return
+	} else {
+		r.SetOk(true)
+		r.Set("Id", id)
+	}
+	c.JSON(http.StatusOK, r)
+}
 
 //BankCardInfo show bank cards info
-func BankCardInfo(c *gin.Context) {}
+func BankCardInfo(c *gin.Context) {
+	c.String(http.StatusOK, "-")
+}

@@ -33,8 +33,10 @@ func SyncModels() (err error) {
 	if err = engine.Sync2(&User{}); err != nil {
 		return
 	}
-
 	if err = engine.Sync2(&Order{}); err != nil {
+		return
+	}
+	if err = engine.Sync2(&BankCard{}); err != nil {
 		return
 	}
 	return nil
