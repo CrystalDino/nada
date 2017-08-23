@@ -18,5 +18,5 @@ func init() {
 		return
 	}
 	//init trade group tp:type op:oprate
-	trade = Server.Group("/trade", getToken(), AuthCheck())
+	trade = Server.Group("/trade", gin.Logger(), gin.Recovery(), getToken(), AuthCheck())
 }

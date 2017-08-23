@@ -8,12 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Result map[string]interface{}
-
 var (
 	//Server web server engine - *gin.Engine
 	Server = gin.New()
-	errs   = make(map[string]Result, 0)
 )
 
 func init() {

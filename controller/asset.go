@@ -21,7 +21,7 @@ func init() {
 		return
 	}
 	//init asset group tp:type op:oprate
-	asset = Server.Group("/asset", getToken(), AuthCheck())
+	asset = Server.Group("/asset", gin.Logger(), gin.Recovery(), getToken(), AuthCheck())
 	asset.GET("/recharge", RechargeLog)
 	asset.POST("/recharge/:op", Recharge)
 

@@ -26,7 +26,7 @@ func init() {
 	Server.POST("/user/login", UserLogin)
 	Server.POST("/user/register", UserRegister)
 	//init user group
-	user = Server.Group("/user", getToken(), AuthCheck())
+	user = Server.Group("/user", gin.Logger(), gin.Recovery(), getToken(), AuthCheck())
 	user.GET("/logout", UserLogout)
 	user.GET("/info", UserInfo)
 	user.POST("/updatepwd", UpdatePasswd)
