@@ -127,5 +127,27 @@ func BankCard(c *gin.Context) {
 
 //BankCardInfo show bank cards info
 func BankCardInfo(c *gin.Context) {
-	c.String(http.StatusOK, "-")
+	bcff := &models.BankCardForFind{}
+	if err := c.Bind(bcff); err != nil {
+		return
+	}
+	uid := c.GetInt64("uid")
+	r := core.NewResult()
+	bankCards, err := models.GetBankCardsByUid(uid, bcff)
+	if err != nil {
+		r.SetErr(err.Error())
+	}
+	bcs := make([]map[string]interface{}, 0)
+	for _, v := range bankCards {
+		if m, err := core.StructToMap(v, false, "UserId", "MTime"); err != nil {
+			log.Println("transper bankcard to map field, bankcard id=", v.Id)
+			continue
+		} else {
+			bcs = append(bcs, m)
+		}
+	}
+	r.SetOk(true)
+	r.Set("BankCards", bcs)
+
+	c.JSON(http.StatusOK, r)
 }
