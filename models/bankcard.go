@@ -21,7 +21,7 @@ type BankCard struct {
 
 type BankCardForAdd struct {
 	CardNo   string `form:"cardno" binding:"required"`
-	CardType int8   `form:"cardtype" binding:"required"`
+	CardType int8   `form:"cardtype" binding:"gte=0,lte=2"`
 	BankAddr string `form:"bankaddr" binding:"required"`
 	Remark   string `form:"remark" binding:"required"`
 	BankName string `form:"bankname" binding:"required"`
@@ -31,7 +31,7 @@ type BankCardForFind struct {
 	Order      string `form:"order" binding:"required"`
 	OrderField string `form:"orderfield" binding:"required"`
 	Begin      int    `form:"begin" binding:"gte=0"`
-	Count      int    `form:"count" binding:"lte=100"`
+	Count      int    `form:"count" binding:"gt=0,lte=100"`
 
 	CardNo   string `form:"cardno"`
 	BankName string `form:"bankname"`

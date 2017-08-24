@@ -22,7 +22,9 @@ func init() {
 	// Global middleware
 	Server.Use(gin.Logger())
 	Server.Use(gin.Recovery())
-
+	//add view
+	Server.StaticFS("/", http.Dir("view/pages"))
+	// Server.StaticFile("/favicon.ico", "view/pages/static/favicon.ico")
 }
 
 func getToken() gin.HandlerFunc {
