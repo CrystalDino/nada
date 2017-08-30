@@ -36,8 +36,12 @@ h6,
     background: #fff;
     -webkit-box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
     box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
-    margin-top: 65px;
-    padding-bottom: 20px;
+    margin-top: 50px;
+    padding: 10px, 0;
+}
+
+.main-foot p {
+    margin-top: 10px;
 }
 
 .main-foot .footer-wrap {
