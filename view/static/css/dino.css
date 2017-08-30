@@ -1,0 +1,101 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-size: 14px;
+    background-color: #f5f5f5;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Helvetica Neue", Helvetica, "Lucida Grande", "Hiragino Sans GB", "Microsoft YaHei", \5fae\8f6f\96c5\9ed1, "WenQuanYi Micro Hei", sans-serif;
+}
+
+.main-header {
+    padding: 80px 0 30px;
+    background-color: #3483A5;
+    background-image: linear-gradient(to bottom, #328BB1, #4baad3);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.main-foot {
+    background: #fff;
+    -webkit-box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+    margin-top: 65px;
+    padding-bottom: 20px;
+}
+
+.main-foot .footer-wrap {
+    padding: 20px 0;
+}
+
+.main-foot .desc {
+    color: #ababab;
+}
+
+.navbar {
+    font-size: 16px;
+}
+
+.navbar .logo img {
+    height: 32px;
+    margin: 8px 15px 0 10px;
+}
+
+.navbar .navbar-menu li.has-icon>a {
+    width: 35px;
+    padding: 0;
+}
+
+.navbar .navbar-menu li.has-icon .icon {
+    font-size: 20px;
+    line-height: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+.navbar .navbar-menu .avatar>a {
+    display: block;
+    padding: 3px;
+}
+
+.navbar .navbar-menu .avatar>a>img {
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+    border: 2px solid #e6e6e6;
+    display: block;
+    background-color: #eee;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+    color: #3071a9;
+    background-color: #f0f0f0;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #428bca;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    color: #f04c5c;
+    background-color: transparent;
+}

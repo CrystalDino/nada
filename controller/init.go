@@ -25,6 +25,8 @@ func init() {
 	//add view
 	Server.StaticFS("/static", http.Dir("view/static"))
 	Server.StaticFile("/favicon.ico", "view/favicon.ico")
+	//load template
+	Server.LoadHTMLGlob("view/templates/*")
 }
 
 func getToken() gin.HandlerFunc {
