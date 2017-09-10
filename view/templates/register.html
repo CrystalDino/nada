@@ -26,9 +26,6 @@
                     <img src="" id="codeImg">
                 </div>
                 <input type="hidden" name="id" id="imgId" value="">
-                <!-- <div class="form-group">
-                    <input value="Sign Up" class="btn btn-primary btn-block" type="submit">
-                </div> -->
                 <button type="button" class="btn btn-primary btn-block" id="submit">Sign Up</button>
             </form>
         </div>
@@ -46,12 +43,15 @@
             if (res.ok) {
                 res.json().then(function (data) {
                     if(data.Ok){
-                        showNotify('success','Register successfully:','your id is '+data.Id);
+                        showNotify('success','Register successfully:','your id is '+data.Id+' Click to login', "login");
                     }else{
                         showNotify('danger','Something error:',data.Err);
                         loadVerifyCode();
                     }
                 });
+            }else{
+                showNotify('danger','Something error:',"please try again");
+                loadVerifyCode();
             }
         }).catch(function (err) {
             cshowNotify('warning','Something wrong:',err);

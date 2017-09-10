@@ -17,7 +17,17 @@ function loadVerifyCode() {
     });
 }
 
-function showNotify(nType, title, msg) {
+function loginCheck() {
+    var nada = localStorage.getItem('nada');
+    if(nada.length!=0){
+        console.log(nada);
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function showNotify(nType, title, msg, tarUrl) {
     var mIcon = 'glyphicon glyphicon-info-sign';
     switch (nType) {
         case 'success':
@@ -37,8 +47,8 @@ function showNotify(nType, title, msg) {
         icon: mIcon,
         title: title,
         message: msg,
-        // url: '',
-        // target: '_blank'
+        url: tarUrl,
+        target: '_self'
     }, {
             element: 'body',
             newest_on_top: true,

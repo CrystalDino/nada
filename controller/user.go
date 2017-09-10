@@ -41,6 +41,7 @@ func UserLogin(c *gin.Context) {
 	r := core.NewResult()
 	ufl := &models.UserForLogin{}
 	if err := c.Bind(ufl); err != nil {
+		println(err.Error())
 		return
 	}
 	//check password
@@ -69,11 +70,11 @@ func UserLogin(c *gin.Context) {
 //UserRegister user register
 func UserRegister(c *gin.Context) {
 	ufr := &models.UserForRegister{}
+	r := core.NewResult()
 	err := c.Bind(ufr)
 	if err != nil {
 		return
 	}
-	r := core.NewResult()
 	u, err := ufr.ToUser()
 	if err != nil {
 		r.SetErr("internal error")

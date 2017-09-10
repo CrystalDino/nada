@@ -19,10 +19,19 @@
                 <li {{if .isAssets}}class="active" {{end}}><a href="/assets"><span class="glyphicon glyphicon-briefcase"></span> Assets</a></li>
                 <li><a href="/code"><span class="glyphicon glyphicon-pencil"></span> Code</a></li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" id="user-stat">
                 <li {{if .isRegister}}class="active" {{end}}><a href="/register">Register</a></li>
                 <li {{if .isLogin}}class="active" {{end}}><a href="/login">Login</a></li>
             </ul>
         </div>
     </div>
 </nav>
+<script>
+    if(loginCheck()){
+        $('#user-stat').children().remove();
+        $('#user-stat').append('<li><a href="login">Logout</a></li>');
+        $('#user-stat').children().click(function(){
+            localStorage.clear();
+        });
+    }
+</script>

@@ -33,7 +33,7 @@ type UserForRegister struct {
 	Name     string `form:"username" binding:"required"`
 	Cell     string `form:"cell" binding:"required"`
 	Password string `form:"password" binding:"required"`
-	Email    string `form:"email" binding:"required"`
+	Email    string `form:"email" binding:"email"`
 	Icon     string `form:"icon"`
 	Info     string `form:"info"`
 }
@@ -94,6 +94,7 @@ func (ufr *UserForRegister) ToUser() (u *User, err error) {
 		Password: ufr.Password,
 		Icon:     ufr.Icon,
 		Info:     ufr.Info,
+		Email:    ufr.Email,
 	}
 	return
 }
