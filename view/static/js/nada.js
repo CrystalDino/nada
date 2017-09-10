@@ -18,9 +18,7 @@ function loadVerifyCode() {
 }
 
 function loginCheck() {
-    var nada = localStorage.getItem('nada');
-    if(nada.length!=0){
-        console.log(nada);
+    if(localStorage.getItem('nada').length!=0){
         return true;
     }else{
         return false;
