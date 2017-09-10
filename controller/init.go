@@ -24,7 +24,6 @@ func init() {
 	Server.Use(gin.Recovery())
 	//add view
 	Server.StaticFS("/static", http.Dir("view/static"))
-	Server.StaticFile("/favicon.ico", "view/favicon.ico")
 	//load template
 	Server.LoadHTMLGlob("view/templates/*")
 }

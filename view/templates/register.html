@@ -1,0 +1,71 @@
+{{template "head.html" .}} {{template "navbar.html" .}}
+<div class="container">
+    <div class="row register-panel">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+            <form class="register-form animate-box fadeIn animated-fast" data-animate-effect="fadeIn" action="#" method="POST" id="register-data">
+                <h2>Sign Up</h2>
+                <div class="form-group">
+                    <label for="cell" class="sr-only">Mobile Phone</label>
+                    <input class="form-control" id="cell" placeholder="mobile phone number" autocomplete="off" type="text" name="cell">
+                </div>
+                <div class="form-group">
+                    <label for="email" class="sr-only">Mobile Phone</label>
+                    <input class="form-control" id="email" placeholder="email" autocomplete="off" type="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="username" class="sr-only">Username</label>
+                    <input class="form-control" id="username" placeholder="Username" autocomplete="off" type="text" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">Password</label>
+                    <input class="form-control" id="password" placeholder="Password" autocomplete="off" type="password" , name="password">
+                </div>
+                <div class="form-group">
+                    <label for="code" class="sr-only">Verify code</label>
+                    <input class="form-control" id="code" placeholder="verify code" name="code" autocomplete="off" type="code">
+                    <img src="" id="codeImg">
+                </div>
+                <input type="hidden" name="id" id="imgId" value="">
+                <!-- <div class="form-group">
+                    <input value="Sign Up" class="btn btn-primary btn-block" type="submit">
+                </div> -->
+                <button type="button" class="btn btn-primary btn-block" id="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submit').click(function () {
+        fetch("user/register", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: $('#register-data').serialize()
+        }).then(function (res) {
+            if (res.ok) {
+                res.json().then(function (data) {
+                    if(data.Ok){
+                        showNotify('success','Register successfully:','your id is '+data.Id);
+                    }else{
+                        showNotify('danger','Something error:',data.Err);
+                        loadVerifyCode();
+                    }
+                });
+            }
+        }).catch(function (err) {
+            cshowNotify('warning','Something wrong:',err);
+            loadVerifyCode();
+        });
+    });
+
+    $('#codeImg').click(function () {
+        loadVerifyCode();
+    });
+
+    $(document).ready(function () {
+        loadVerifyCode();
+    });
+
+</script>
+{{template "foot.html" .}}

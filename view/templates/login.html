@@ -1,0 +1,39 @@
+{{template "head.html" .}} {{template "navbar.html" .}}
+<div class="container login">
+    <div class="row register-panel">
+        <div class="col-md-8">
+            <img src="static/img/nada.svg" alt="">
+        </div>
+        <!-- <div class="col-md-4 col-md-push-8"> -->
+        <div class="col-md-4">
+            <form action="#" class="register-form animate-box fadeInRight animated-fast" data-animate-effect="fadeInRight">
+                <h2>Sign In</h2>
+                <div class="form-group">
+                    <label for="cell" class="sr-only">Mobile Phone</label>
+                    <input class="form-control" id="cell" placeholder="mobile phone number" autocomplete="off" type="text" name="cell">
+                </div>
+                <div class="form-group">
+                    <label for="username" class="sr-only">Username</label>
+                    <input class="form-control" id="username" placeholder="Username" autocomplete="off" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">Password</label>
+                    <input class="form-control" id="password" placeholder="Password" autocomplete="off" type="password">
+                </div>
+                <div class="form-group">
+                    <label for="code" class="sr-only">Verify code</label>
+                    <input class="form-control" id="code" placeholder="verify code" name="code" autocomplete="off" type="code">
+                    <img src="" id="codeImg">
+                </div>
+                <input type="hidden" name="id" id="imgId" value="">
+                <div class="form-group">
+                    <p>Not registered? <a href="sign-up.html">Sign In</a> | <a href="forgot.html">Forgot Password?</a></p>
+                </div>
+                <div class="form-group">
+                    <input value="Sign In" class="btn btn-primary btn-block" type="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{template "foot.html" .}}

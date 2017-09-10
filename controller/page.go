@@ -79,10 +79,18 @@ func Code(c *gin.Context) {
 
 //Login the login page
 func Login(c *gin.Context) {
-	c.String(http.StatusOK, "login")
+	c.HTML(http.StatusOK, "login.html", gin.H{
+		"title":       "Login",
+		"isLogin":     true,
+		"isFixBottom": true,
+	})
 }
 
 //Register user register page
 func Register(c *gin.Context) {
-	c.String(http.StatusOK, "resiger")
+	c.HTML(http.StatusOK, "register.html", gin.H{
+		"title":       "Register",
+		"isRegister":  true,
+		"isFixBottom": true,
+	})
 }

@@ -11,6 +11,7 @@ import (
 
 	"reflect"
 
+	"github.com/dchest/captcha"
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,16 +45,16 @@ func UserLogin(c *gin.Context) {
 	}
 
 	//check verify code
-	// if ufl.CheckCode == "" || ufl.CheckID == "" {
-	// 	r["Err"] = "field lost"
-	// 	c.JSON(http.StatusOK, r)
-	// 	return
-	// }
-	// if !captcha.VerifyString(ufl.CheckID, ufl.CheckCode) {
-	// 	r["Err"] = "verify failed"
-	// 	c.JSON(http.StatusOK, r)
-	// 	return
-	// }
+	if ufl.CheckCode == "" || ufl.CheckID == "" {
+		r["Err"] = "field lost"
+		c.JSON(http.StatusOK, r)
+		return
+	}
+	if !captcha.VerifyString(ufl.CheckID, ufl.CheckCode) {
+		r["Err"] = "verify failed"
+		c.JSON(http.StatusOK, r)
+		return
+	}
 
 	//check password
 	u, err := ufl.UserPasswdCheck()
@@ -80,14 +81,32 @@ func UserLogin(c *gin.Context) {
 
 //UserRegister user register
 func UserRegister(c *gin.Context) {
-	u := &models.User{}
-	err := c.Bind(u)
+	ufr := &models.UserForRegister{}
+	err := c.Bind(ufr)
 	if err != nil {
+		return
+	}
+
+	r := core.NewResult()
+	//check verify code
+	if ufr.CheckCode == "" || ufr.CheckID == "" {
+		r.SetErr("field lost")
+		c.JSON(http.StatusOK, r)
+		return
+	}
+	if !captcha.VerifyString(ufr.CheckID, ufr.CheckCode) {
+		r.SetErr("verify failed")
+		c.JSON(http.StatusOK, r)
+		return
+	}
+	u, err := ufr.ToUser()
+	if err != nil {
+		r.SetErr("internal error")
+		c.JSON(http.StatusOK, r)
 		return
 	}
 	u.LastLoginIp = c.ClientIP()
 	u.LTime = time.Now().Unix()
-	r := core.NewResult()
 	id, err := u.Stor()
 	if err != nil {
 		r.SetErr(err.Error())

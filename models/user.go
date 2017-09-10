@@ -10,11 +10,11 @@ import (
 
 type User struct {
 	Id          int64
-	Name        string `xorm:"char(32) notnull" form:"username" binding:"required"`
-	Cell        string `xorm:"char(16) notnull index unique" form:"cell" binding:"required"`
-	Password    string `xorm:"char(64) notnull" form:"password" binding:"required"`
+	Name        string `xorm:"char(32) notnull"`
+	Cell        string `xorm:"char(16) notnull index unique"`
+	Password    string `xorm:"char(64) notnull"`
 	Transcode   string `xorm:"char(64)"`
-	Email       string `xorm:"char(32)" form:"email" binding:"required"`
+	Email       string `xorm:"char(32)"`
 	LastLoginIp string `xorm:"char(16)"`
 	Stat        int8
 	LTime       int64
@@ -25,8 +25,19 @@ type User struct {
 	Sex         int8   `xorm:"tinyint(1)"`
 	CardNo      string `xorm:"char(20)"`
 	Area        string `xorm:"varchar(128)"`
-	Icon        string `xorm:"char(128)" form:"icon"`
-	Info        string `xorm:"varchar(256)" form:"info"`
+	Icon        string `xorm:"char(128)"`
+	Info        string `xorm:"varchar(256)"`
+}
+
+type UserForRegister struct {
+	Name      string `form:"username" binding:"required"`
+	Cell      string `form:"cell" binding:"required"`
+	Password  string `form:"password" binding:"required"`
+	Email     string `form:"email" binding:"required"`
+	Icon      string `form:"icon"`
+	Info      string `form:"info"`
+	CheckCode string `form:"code" binding:"required"`
+	CheckID   string `form:"id" binding:"required"`
 }
 
 type UserForLogin struct {
@@ -76,6 +87,17 @@ func (ufl *UserForLogin) UserPasswdCheck() (u *User, err error) {
 	if err != nil {
 		u = nil
 		return
+	}
+	return
+}
+
+func (ufr *UserForRegister) ToUser() (u *User, err error) {
+	u = &User{
+		Cell:     ufr.Cell,
+		Name:     ufr.Name,
+		Password: ufr.Password,
+		Icon:     ufr.Icon,
+		Info:     ufr.Info,
 	}
 	return
 }
