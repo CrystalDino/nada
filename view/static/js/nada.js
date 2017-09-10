@@ -1,16 +1,5 @@
 
 function loadVerifyCode() {
-    // $.get("captcha?type=id",
-    //     function (data) {
-    //         if (!data.Ok) {
-    //             alert(data.Err);
-    //             $('#info').html(data.Err);
-    //             return;
-    //         }
-    //         $('#codeImg').attr("src", "/captcha?type=pic&name=" + data.Id + ".png");
-    //         $('#imgId').val(data.Id);
-    //     }, "json");
-
     fetch("captcha?type=id", {
         method: "GET"
     }).then(function (res) {

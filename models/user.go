@@ -30,21 +30,17 @@ type User struct {
 }
 
 type UserForRegister struct {
-	Name      string `form:"username" binding:"required"`
-	Cell      string `form:"cell" binding:"required"`
-	Password  string `form:"password" binding:"required"`
-	Email     string `form:"email" binding:"required"`
-	Icon      string `form:"icon"`
-	Info      string `form:"info"`
-	CheckCode string `form:"code" binding:"required"`
-	CheckID   string `form:"id" binding:"required"`
+	Name     string `form:"username" binding:"required"`
+	Cell     string `form:"cell" binding:"required"`
+	Password string `form:"password" binding:"required"`
+	Email    string `form:"email" binding:"required"`
+	Icon     string `form:"icon"`
+	Info     string `form:"info"`
 }
 
 type UserForLogin struct {
-	Cell      string `form:"cell" binding:"required"`
-	Password  string `form:"password" binding:"required"`
-	CheckCode string `form:"code" binding:"required"`
-	CheckID   string `form:"id" binding:"required"`
+	Cell     string `form:"cell" binding:"required"`
+	Password string `form:"password" binding:"required"`
 }
 
 type UserForUpdateInfo struct {

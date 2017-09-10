@@ -24,8 +24,8 @@ func init() {
 		log.Fatalln("user:init web server error")
 		return
 	}
-	Server.POST("/user/login", UserLogin)
-	Server.POST("/user/register", UserRegister)
+	Server.POST("/user/login", VerifyCodeCheck(), UserLogin)
+	Server.POST("/user/register", VerifyCodeCheck(), UserRegister)
 	//init user group
 	user = Server.Group("/user", gin.Logger(), gin.Recovery(), getToken(), AuthCheck())
 	user.GET("/logout", UserLogout)
@@ -43,19 +43,6 @@ func UserLogin(c *gin.Context) {
 	if err := c.Bind(ufl); err != nil {
 		return
 	}
-
-	//check verify code
-	if ufl.CheckCode == "" || ufl.CheckID == "" {
-		r["Err"] = "field lost"
-		c.JSON(http.StatusOK, r)
-		return
-	}
-	if !captcha.VerifyString(ufl.CheckID, ufl.CheckCode) {
-		r["Err"] = "verify failed"
-		c.JSON(http.StatusOK, r)
-		return
-	}
-
 	//check password
 	u, err := ufl.UserPasswdCheck()
 	if err != nil {
@@ -86,19 +73,7 @@ func UserRegister(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
 	r := core.NewResult()
-	//check verify code
-	if ufr.CheckCode == "" || ufr.CheckID == "" {
-		r.SetErr("field lost")
-		c.JSON(http.StatusOK, r)
-		return
-	}
-	if !captcha.VerifyString(ufr.CheckID, ufr.CheckCode) {
-		r.SetErr("verify failed")
-		c.JSON(http.StatusOK, r)
-		return
-	}
 	u, err := ufr.ToUser()
 	if err != nil {
 		r.SetErr("internal error")
@@ -260,6 +235,34 @@ func AuthCheck() gin.HandlerFunc {
 			}
 			c.Set("uid", int64(v.(float64)))
 			c.Set(core.GlobalConfig.GetTokenName(), data)
+		}
+		c.Next()
+	}
+}
+
+func VerifyCodeCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, has := c.GetPostForm("id")
+		if !has {
+			r := core.MakeResult(false, "verify params lost id")
+			c.AbortWithStatusJSON(http.StatusBadRequest, r)
+			return
+		}
+		code, has := c.GetPostForm("code")
+		if !has {
+			r := core.MakeResult(false, "verify params lost code")
+			c.AbortWithStatusJSON(http.StatusBadRequest, r)
+			return
+		}
+		if id == "" || code == "" {
+			r := core.MakeResult(false, "verify params is empty")
+			c.AbortWithStatusJSON(http.StatusOK, r)
+			return
+		}
+		if !captcha.VerifyString(id, code) {
+			r := core.MakeResult(false, "verify failed")
+			c.AbortWithStatusJSON(http.StatusOK, r)
+			return
 		}
 		c.Next()
 	}
